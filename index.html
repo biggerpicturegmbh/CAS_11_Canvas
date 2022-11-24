@@ -36,15 +36,26 @@
       const cnv1 = document.getElementById("cnv1");
       const ctx1 = cnv1.getContext("2d");
 
-      // let mouseX 
-      // let mouseY
-      
-      // VARIANTE A
-      // window.addEventListener("mousemove", (e) => {
-      //   mouseX = e.clientX;
-      //   mouseY = e.clientY;
-      //   return mouseX;
-      // });
+      // globale Variablen ohne Wert initialisieren
+      let mouseX
+      let mouseY
+      // Hier haben mouseX und mouseY keinen Wert
+      window.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX; // Wert zuweisen
+        mouseY = e.clientY; // Wert zuweisen
+      });
+      // Hier haben mouseX und mouseY auch keinen Wert
+
+      function refresh() {
+        if (mouseX && mouseY) {
+          // hier haben sie (irgendwann) einen Wert
+          let iShiftX = mapRange(mouseX, 0, cnv1.offsetWidth, -10, 10);
+          let iShiftY = mapRange(mouseY, 0, cnv1.offsetHeight, -10, 10);
+        }
+        window.requestAnimationFrame(refresh)
+      }
+
+      refresh() // erster Aufruf, dann Rekursion
       
       // let iShiftX = mouseX;
       // console.log(mouseX);
@@ -60,9 +71,9 @@
       // let iShiftY = mapRange(mPos(mouseY), 0, cnv1.offsetHeight, -10, 10)
 
       // Platzhalter bis Mouse geht, Var A
-      let iShiftX = mapRange(Math.random(), 0, 1, -10, 10)
-      let iShiftY = mapRange(Math.random(), 0, 1, -10, 10)
-      console.log(iShiftX)
+      // let iShiftX = mapRange(Math.random(), 0, 1, -10, 10)
+      // let iShiftY = mapRange(Math.random(), 0, 1, -10, 10)
+      // console.log(iShiftX)
       
       optimizeCanvas(cnv1);
       cnv1.style.background = "black";
