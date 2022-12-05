@@ -36,6 +36,14 @@
       const cnv1 = document.getElementById("cnv1");
       const ctx1 = cnv1.getContext("2d");
 
+      // Alle Bilder in einer Liste könnte nützlich sein …
+      const images = [img1, img2, img3]
+      let loadedImages = 0
+
+      // Cursor Position
+      let mouseX
+      let mouseY
+      // Werte werden zugewiesen, wenn Maus bewegt
 
       // -- VARIANTE A, mit Josefs Input
       // // globale Variablen ohne Wert initialisieren
@@ -72,15 +80,39 @@
       // let iShiftX = mapRange(mPos(mouseX), 0, cnv1.offsetWidth, -10, 10)
       // let iShiftY = mapRange(mPos(mouseY), 0, cnv1.offsetHeight, -10, 10)
 
+      // Cursor-Position erfassen
+
+      window.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX
+        mouseY = e.clientY
+      })
+
       // Platzhalter bis Mouse geht, Var A
       let iShiftX = mapRange(Math.random(), 0, 1, -10, 10)
       let iShiftY = mapRange(Math.random(), 0, 1, -10, 10)
+
+      // Augen auf Cursor richten geht z.B. mit Math.atan2
+      // https://youtu.be/LHzgW9aQUV8
+
       console.log(iShiftX)
       
       optimizeCanvas(cnv1);
       cnv1.style.background = "black";
       
-      img1.addEventListener("load", () => {
+      for (let image of images) {
+        image.addEventListener("load", () => {
+          // ein weiteres Bild wurde geladen
+          loadedImages += 1
+        })
+      }
+      
+      function drawImages() {
+        drawImg1()
+        drawImg2()
+        drawImg3()
+      }
+      
+      function drawImg1() {
         const nw = img1.naturalWidth;
         const nh = img1.naturalHeight;
         const ow = cnv1.offsetWidth;
@@ -88,9 +120,9 @@
         ctx1.drawImage(
           img1, 0, 0, nw, nh, ow / 2 - nw / 2, oh / 2 - nh / 2.5, ow, ow
         );
-      });
+      }
       // -- Hier IRIS --> bewegen
-      img2.addEventListener("load", () => {
+      function drawImg2() {
         const nw = img2.naturalWidth;
         const nh = img2.naturalHeight;
         const ow = cnv1.offsetWidth;
@@ -101,8 +133,8 @@
           oh / 2 - nh / 2.5 + iShiftY, 
           ow, ow
         );
-      });
-      img3.addEventListener("load", () => {
+      }
+      function drawImg3() {
         const nw = img3.naturalWidth;
         const nh = img3.naturalHeight;
         const ow = cnv1.offsetWidth;
@@ -110,23 +142,35 @@
         ctx1.drawImage(
           img3, 0, 0, nw, nh, ow / 2 - nw / 2, oh / 2 - nh / 2.5, ow, ow
         );
-      });
+      }
 
-      // --- MARQUEE ---
-      function marqueee() {
+      /*
+        Diese FunktionHiess Marquee, aber hier müssen auch die Bidler
+        gezeichnet werden, damit das Daumenkino läuft, darum hab ich
+        sie in «refresh» umgetauft.
+      */
+      function refresh() {
+        // wurden alle Bilder gelade?
+        if (loadedImages === 3) {
+          // wenn ja, den ganzen Rest ausführen
+          drawImages()
+        }
+
+        // Marquee
         heading.style.transform = `translateX(${x}px)`
         if (x > -window.innerWidth) {
           x = x - 1
         } else {
           x = window.innerWidth
         }
-        window.requestAnimationFrame(marqueee)
+
+        window.requestAnimationFrame(refresh)
       }
 
       let x = window.innerWidth
       const heading = document.querySelector('h1')
 
-      marqueee()
+      refresh()
 
     </script>
   </body>
